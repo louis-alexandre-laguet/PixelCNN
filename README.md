@@ -1,30 +1,30 @@
 # PixelCNN
 
-PixelCNN est un modèle autorégressif de génération d'images publié en 2016 par Aäron van den Oord et al.,  
-de l'équipe DeepMind chez Google. Il appartient à la famille des modèles autoregressifs, où chaque élément d'une séquence  
-est généré en fonction des éléments précédents.
+PixelCNN is an autoregressive image generation model published in 2016 by Aäron van den Oord et al.,  
+from the DeepMind team at Google. It belongs to the family of autoregressive models, where each element of a sequence  
+is generated based on the previous elements.
 
-Les images sont générées pixel par pixel en suivant un ordre défini (généralement de gauche à droite et de haut en bas).  
-Chaque pixel est conditionné uniquement sur les pixels déjà générés, ce qui impose une contrainte de dépendance directionnelle.  
-Pour garantir cette contrainte, PixelCNN utilise des **couches de convolution masquées**, empêchant l’accès aux pixels  
-"futurs" lors du calcul des prédictions.  
+Images are generated pixel by pixel following a defined order (typically from left to right and top to bottom).  
+Each pixel is conditioned only on the pixels that have already been generated, which imposes a directional dependency constraint.  
+To ensure this constraint, PixelCNN uses **masked convolution layers**, which prevent access to "future" pixels  
+when making predictions.
 
-Deux types de convolutions masquées sont utilisées :  
-- **Masque de type A** : Empêche tout accès au pixel en cours de génération, utile dans la première couche pour s'assurer  
-  que chaque pixel est généré indépendamment des valeurs actuelles.  
-- **Masque de type B** : Autorise l'accès au pixel en cours de génération, utilisé dans les couches suivantes pour permettre  
-  un meilleur passage d'information tout en respectant l’ordre de génération. 
+Two types of masked convolutions are used:  
+- **Mask type A**: Prevents access to the current pixel being generated, useful in the first layer to ensure  
+  that each pixel is generated independently of the current values.  
+- **Mask type B**: Allows access to the current pixel being generated, used in the following layers to allow  
+  better information flow while respecting the generation order.
 
-À l’issue de cette convolution, le modèle produit une **distribution discrète** sur les valeurs possibles du pixel,  
-et sa valeur est ensuite échantillonnée en fonction de cette distribution.
+After this convolution, the model produces a **discrete distribution** over the possible pixel values,  
+and its value is then sampled according to this distribution.
 
-Afin d'améliorer la capacité du modèle à capturer des relations longues portées dans l'image, des **blocs residuels**
-ont été introduits ajoutant ainsi des connexions directes entre les couches profondes et peu profondes.  
+To improve the model's ability to capture long-range relationships in the image, **residual blocks**  
+have been introduced, adding direct connections between deep and shallow layers.
 
-Pendant l'entraînement, PixelCNN minimise l'**entropie croisée** entre les pixels prédits et les pixels réels.  
+During training, PixelCNN minimizes the **cross-entropy** between the predicted pixels and the actual pixels.
 
-Lors de l'inférence, l’image est générée séquentiellement :
-1. On initialise une image vide ou bruitée.  
-2. Pour chaque pixel, le modèle prédit une distribution de probabilité sur ses valeurs possibles.  
-3. Un échantillon est tiré selon cette distribution, et le pixel est fixé.  
-4. Le processus est répété jusqu'à ce que l’image complète soit générée.
+During inference, the image is generated sequentially:  
+1. A blank or noisy image is initialized.  
+2. For each pixel, the model predicts a probability distribution over its possible values.  
+3. A sample is drawn from this distribution, and the pixel is set.  
+4. This process is repeated until the entire image is generated.
